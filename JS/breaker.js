@@ -1,5 +1,13 @@
+/**
+ * Manages breaks between games
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Breaker(parent)
 {
+    /**
+     * Hides/unhides breaker container
+     */
     this.toggle = function()
     {
         if (hidden)
@@ -14,11 +22,19 @@ function Breaker(parent)
         hidden = !hidden;
     }
     
+    /**
+     * Setts time for the break
+     * @param {Number} time - amount of time for the break
+     */
     this.setTime = function(time)
     {
         DOM.time.innerHTML = time + "s";
     }
     
+    /**
+     * @var {Object} DOM    - DOM tree of the class
+     * @var {Bool}   hidden - flag for indicating visibility
+     */
     var DOM =
         {
             container: null,
