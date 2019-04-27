@@ -22,10 +22,9 @@ function State(parent, tests)
     }
     
     /**
-     * Function switches to the next test
-     * @type {Function}
+     * Switches to the next test
      */
-    var next = (function()
+    function()
     {
         current++;
         frame.free();
@@ -33,7 +32,7 @@ function State(parent, tests)
         DOM.next.disabled = true;
         
         tests[current].run(frame, this);
-    }).bind(this);
+    }
     
     /**
      * Freed ability (makes button active) to go to the next test.
