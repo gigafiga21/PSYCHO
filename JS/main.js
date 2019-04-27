@@ -176,7 +176,7 @@ var tests =
         },
         {
             name: "5Б",
-            run: B3.bind(null, 3, null, false)
+            run: B3.bind(null, 3, "WAV/clap.wav", false)
         },
         {
             name: "5В",
