@@ -1,5 +1,15 @@
+/**
+ * Shows given score on screen
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ * @param {Number}  score  - score to display
+ */
 function Score(parent, score)
 {
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
