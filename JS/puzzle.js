@@ -1,5 +1,15 @@
+/**
+ * Puzzle game
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Puzzle(parent)
 {
+    /**
+     * Generates path of the random polygon with 3-6 angles
+     * This polygon will be sliced to the puzzles after
+     * @return {Array} - flat array with coords of vertices
+     */
     function generateMainFigure()
     {
         var angles = Math.random(3, 6),
@@ -18,6 +28,11 @@ function Puzzle(parent)
         return path;
     }
     
+    /**
+     * Splitts main polygon into the puzzles
+     * @param  {Array} polygon - flat array with coords of polygon
+     * @return {Array}         - contains arrays with coords of each piece of the sliced main polygon
+     */
     function splitMainFigure(polygon)
     {
         var slices = [];
@@ -52,6 +67,10 @@ function Puzzle(parent)
         return slices;
     }
     
+    /**
+     * Draggs puzzle piece while the mouse is down on it
+     * @type {Function}
+     */
     var drag = (function(event)
     {
         var points = dragging.getAttribute("points").split(","),
@@ -72,6 +91,11 @@ function Puzzle(parent)
         dragging.setAttribute("points", points);
     }).bind(this);
     
+    /**
+     * Releases dragging of the puzzle piece
+     * If piece was release at right place - will be fixed, else - returned to where it was before dragging
+     * @type {Function}
+     */
     var drop = (function(event)
     {
         var index = Number(dragging.getAttribute("index")),
@@ -102,6 +126,10 @@ function Puzzle(parent)
         dragging = null;
     }).bind(this);
     
+    /**
+     * Enables dragging of the puzzle piece after mouse is down on it
+     * @type {Function}
+     */
     var grab = (function(event)
     {
         dragging = event.target.cloneNode(true);
@@ -120,6 +148,9 @@ function Puzzle(parent)
         puzzles[index].cursorY = (event.pageY - canvasCoords.top) - box.y
     }).bind(this);
     
+    /**
+     * Generates SVG canvas and draws puzzle on it
+     */
     function drawPuzzle()
     {
         var polygon = generateMainFigure();
@@ -178,21 +209,38 @@ function Puzzle(parent)
         DOM.canvas.style.width = edge.xMax + 50 + "px";
     }
     
+    /**
+     * Releases grabbed puzzle piece
+     */
     this.free = function()
     {
         document.body.dispatchEvent(new Event("mouseup"));
     }
     
+    /**
+     * Returns amount of solved puzzles
+     * @return {Number}
+     */
     this.getScore = function()
     {
         return score;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM = 
         {
             canvas: null
         };
 
+    /**
+     * @var {Array}        puzzles  - array of SVG elements presented by the puzzle pieces
+     * @var {Number}       steps    - amount of pieces which was not placed yet at the puzzle at the right way
+     * @var {Element|Null} dragging - current dragging puzzle piece
+     * @var {Number}       score    - amount of solved puzzles
+     */
     var puzzles = [],
         steps = 0,
         dragging = null,

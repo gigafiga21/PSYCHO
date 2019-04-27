@@ -1,3 +1,11 @@
+/**
+ * Function managing tests similar to 3B one
+ * @param {Number} seconds - amount of seconds for the rest
+ * @param {String} audio   - audiotrack playing while rest
+ * @param {Bool}   lasting - if true then audiotrack will be played through all rest time
+ * @param {Test}   frame   - container for the screens
+ * @param {State}  state   - container for the tests
+ */
 function B3(seconds, audio, lasting, frame, state)
 {
     var switchGame = (function()
@@ -80,6 +88,10 @@ function B3(seconds, audio, lasting, frame, state)
     setTimeout(rest, 10000);
 }
 
+/**
+ * All tests
+ * @type {Array}
+ */
 var tests =
     [
         {
