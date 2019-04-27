@@ -1,5 +1,14 @@
+/**
+ * Game based on pressing button after the dot appears on the screen
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ * @param {Number}  time   - maximum amount of seconds between pressing button and displaying the dot again
+ */
 function Concentration(parent, time)
 {
+    /**
+     * Draws dot on the random coords at the game field
+     */
     function drawPoint()
     {
         DOM.point = DOM.field.newChildElement("div", {classList: "concentration__point"});
@@ -7,6 +16,9 @@ function Concentration(parent, time)
         DOM.point.style.top = Math.floor(Math.random(5, 260)) + "px";
     }
     
+    /**
+     * Removes previously drawed dot and setts timeout for drawing next one randomly
+     */
     function generatePoint()
     {
         if (!DOM.point && !first)
@@ -31,6 +43,10 @@ function Concentration(parent, time)
             }, Math.floor(Math.random(0, time / 4)));
     }
     
+    /**
+     * Removes processing timeout for dot drawing
+     * Calls when class instance was destroyed by removing game from screen
+     */
     this.free = function()
     {
         if (timer != null)
@@ -40,6 +56,10 @@ function Concentration(parent, time)
         }
     }
     
+    /**
+     * Processes button click when 'Enter' is pressed
+     * @type {Function}
+     */
     var getCode = (function(event)
     {
         if (event.which == 13 || event.keyCode == 13)
@@ -48,6 +68,11 @@ function Concentration(parent, time)
         }
     }).bind(this);
     
+    /**
+     * @var {Number} timer - id of the processing dot drawing timer
+     * @var {Bool}   first - flag for avoiding removing unexisting dot when regenerating it first time
+     * @var {Object} DOM   - DOM tree of the class
+     */
     var timer = null,
         first = true,
         DOM =
