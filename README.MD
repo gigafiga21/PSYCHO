@@ -11,3 +11,5 @@ An set of tests for en experiment based on mind distraction. You will be given 1
 8. As like as 4th one, but while rest the distractive sound will be played (it is a siren, so be prepared, :3)
 9. Like the previous one but distractive sound replaced with signal stimulating attention
 10. Pure test 4 again to sum up.
+### FAQ
+To run the tests, execute Windows binary file `BIN/WIN32/tests.exe`. Because of the fact that Psych is written on JS you may also run it with your browser. To do this open file `main.html` with your browser (tested only in Google Chrome and Yandex, because of electron engine is based on V8).
