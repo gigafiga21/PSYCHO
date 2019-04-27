@@ -1,7 +1,23 @@
+/**
+ * Game based on the simple equatation solving
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Ariphmetics(parent)
 {
+    /**
+     * Generates equatation and calculates right solution for it
+     * @return {Equatation}
+     */
     function generateEquotation()
     {
+        /**
+         * @typedef {Object} Equatation
+         * @prop    {Number} a         - first operand
+         * @prop    {Number} b         - second operand
+         * @prop    {String} operation - operation applied to the operands
+         * @prop    {Number} result    - solution
+         */
         var equotation =
             {
                 a: null,
@@ -36,6 +52,10 @@ function Ariphmetics(parent)
         return equotation;
     }
     
+    /**
+     * Randomly generates wrong solutions for given equatation
+     * @param {Number} seed - right solution of the equatation
+     */
     function generateAnswers(seed)
     {
         var answers = [];
@@ -56,6 +76,9 @@ function Ariphmetics(parent)
         return answers.slice(0, 2);
     }
     
+    /**
+     * Fills DOM of the class instance with generated equatation and solutions
+     */
     function generateTask()
     {
         var equotation = generateEquotation(),
@@ -91,11 +114,19 @@ function Ariphmetics(parent)
         generateTask();
     }
     
+    /**
+     * Returns amount of equatations solved right
+     * @return {Number}
+     */
     this.getScore = function()
     {
         return score;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
@@ -103,6 +134,10 @@ function Ariphmetics(parent)
             answers: null
         };
     
+    /**
+     * Amount of given right solutions
+     * @type {Number}
+     */
     var score = 0;
     
     DOM.container = parent.newChildElement("div", {classList: "ariphmetics__container"});
