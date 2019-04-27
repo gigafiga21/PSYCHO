@@ -10,7 +10,8 @@ An set of tests for en experiment based on mind distraction. You will be given 1
 7. The test like 4th one but with another game before the main part - you should press the button on screen or *Enter* when the dot/circle appears at the screen (15sec for 1st game, as usual for the main part)
 8. As like as 4th one, but while rest the distractive sound will be played (it is a siren, so be prepared, :3)
 9. Like the previous one but distractive sound replaced with signal stimulating attention
-10. Pure test 4 again to sum up.
+10. Test 4 with methronome sounds
+11. Pure test 4 again to sum up
 
 ### FAQ
 To run the tests, execute Windows binary file `BIN/WIN32/tests.exe`. Because of the fact that Psych is written on JS you may also run it with your browser. To do this open file `main.html` with your browser (tested only in Google Chrome and Yandex, because of electron engine is based on V8).
