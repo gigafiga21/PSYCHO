@@ -1,5 +1,16 @@
+/**
+ * Class manages tests switching
+ * @constructor
+ * @param {Element}       parent       - where to place app
+ * @param {Array[Object]} tests        - array with description of tests
+ * @param {String}        tests[].name - name of the test
+ * @param {Function}      tests[].run  - function runs the test
+ */
 function State(parent, tests)
 {
+    /**
+     * Generates start screen of the app
+     */
     function generateStartScreen()
     {
         var menu = frame.add(0);
@@ -10,6 +21,10 @@ function State(parent, tests)
             }, "Начать тестирование");
     }
     
+    /**
+     * Function switches to the next test
+     * @type {Function}
+     */
     var next = (function()
     {
         current++;
@@ -20,6 +35,11 @@ function State(parent, tests)
         tests[current].run(frame, this);
     }).bind(this);
     
+    /**
+     * Freed ability (makes button active) to go to the next test.
+     * Calls by function run stored in the tests array when test is done
+     * @callback run
+     */
     this.continue = function()
     {
         if (current == tests.length - 1)
@@ -28,9 +48,13 @@ function State(parent, tests)
             current = -1;
         }
         
-        DOM.next.disabled = false
+        DOM.next.disabled = false;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
@@ -39,6 +63,10 @@ function State(parent, tests)
             frame: null
         };
     
+    /**
+     * @var {Number} current - current test index
+     * @var {Test}   frame   - container class for test
+     */
     var current = -1,
         frame = new Test(document.body);
     
