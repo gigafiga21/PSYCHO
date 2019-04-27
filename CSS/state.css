@@ -1,0 +1,56 @@
+.state__container
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: venter;
+    position: fixed;
+    bottom: 0%;
+    margin-bottom: 20px;
+}
+
+.state__name
+{
+    margin-right: 5px;
+    font-size: 40px;
+    opacity: 0.5;
+}
+
+.state__button
+{
+    padding: 10px;
+    border: none;
+    color: #ffffff;
+    font-size: 15px;
+    background: none;
+    opacity: 0.5;
+    transition: padding 0.2s, font-size 0.2s, opacity 0.2s, color 0.2s, background 0.2s;
+}
+
+.state__start
+{
+    font-size: 40px;
+}
+
+.state__button:hover
+{
+    opacity: 1;
+}
+
+.state__button:active
+{
+    color: #f36223;
+    background: #ffffff;
+}
+
+.state__button:disabled
+{
+    padding: 0px;
+    color: none;
+    font-size: 0px;
+    background: none;
+}
+
+.state__button:focus
+{
+    outline: none;
+}

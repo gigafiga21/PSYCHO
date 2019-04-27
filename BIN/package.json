@@ -1,0 +1,17 @@
+{
+  "name": "Tests",
+  "version": "1.0.0",
+  "description": "Very difficult",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "collect": "electron ./package.js",
+    "build": "electron-packager ./ tests --platform=win32 --arch=ia32 --electronVersion=4.0.3 --app-version=1.0.0 --build-version=1.0 --prune=false --overwrite=true"
+  },
+  "author": "gigafiga21",
+  "devDependencies": {
+    "electron": "^4.0.3",
+    "electron-packager": "^13.0.1",
+    "electron-winstaller": "^2.7.0"
+  }
+}

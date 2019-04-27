@@ -1,0 +1,35 @@
+.puzzle__canvas
+{
+    width: 600px;
+    height: 300px;
+    transition: width 0.2s;
+}
+
+.puzzle__frame
+{
+    stroke: #ffffff; 
+    stroke-dasharray: 4 2;
+    stroke-width: 2;
+    stroke-opacity: 0.5;
+    fill-opacity: 0;
+}
+
+.puzzle__puzzle
+{
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-opacity: 1;
+    fill: #ffffff;
+    fill-opacity: 0;
+    transition: fill-opacity 0.2s;
+}
+
+.puzzle__puzzle:hover
+{
+    fill-opacity: 0.5;
+}
+
+.puzzle__puzzle:active
+{
+    fill-opacity: 1;
+}

@@ -1,0 +1,27 @@
+.test__container
+{
+    position: absolute;
+    transition: left 0.2s;
+}
+
+.test__cell
+{
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.test__inactive_cover
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.test__inactive
+{
+    opacity: 0.2;
+}

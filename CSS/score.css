@@ -1,0 +1,23 @@
+.score__container
+{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin: 50px;
+}
+
+.score__header
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-right: 3px;
+    line-height: 2;
+    opacity: 0.7;
+}
+
+.score__result
+{
+    display: flex;
+    font-size: 40px;
+}

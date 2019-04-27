@@ -1,0 +1,42 @@
+.ariphmetics__container
+{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 50px;
+}
+
+.ariphmetics__equotation
+{
+    display: flex;
+    position: relative;
+    margin-left: 26px;
+}
+
+.ariphmetics__checkbox
+{
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin: 3px 10px 0px 3px;
+    border: 1.5px solid #ffffff;
+    padding: 0px;
+    border-radius: 3px;
+    background: none;
+    transition: background 0.2s;
+}
+
+.ariphmetics__checkbox:hover
+{
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.ariphmetics__checkbox:active
+{
+    background: rgba(255, 255, 255, 1);
+}
+
+.ariphmetics__checkbox:focus
+{
+    outline: none;
+}

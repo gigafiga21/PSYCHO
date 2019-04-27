@@ -1,0 +1,34 @@
+{
+    "combineOnSave": false,
+    "combine": [
+        {
+            "output": "BIN/bin.css",
+            "files": [
+                "CSS/puzzle.css",
+                "CSS/ariphmetics.css",
+                "CSS/concentration.css",
+                "CSS/breaker.css",
+                "CSS/score.css",
+                "CSS/state.css",
+                "CSS/test.css",
+                "CSS/main.css"
+            ]
+        },
+        {
+            "output": "BIN/bin.js",
+            "files": [
+                "JS/basis.min.js",
+                "JS/polyk.js",
+                "JS/common.js",
+                "JS/puzzle.js",
+                "JS/ariphmetics.js",
+                "JS/concentration.js",
+                "JS/breaker.js",
+                "JS/score.js",
+                "JS/state.js",
+                "JS/test.js",
+                "JS/main.js"
+            ]
+        }
+    ]
+}
