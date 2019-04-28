@@ -537,7 +537,8 @@ Math.random = function(min, max)
     return min + rand() * (max + 1 - min);
 }
 /**
- * Singleton keeps all strings used for translation
+ * Singleton tracking signal of changing language
+ * When language is changed, listener will be called. To get translation bind it to the listener function.
  * @type {Object}
  */
 var translations = new
@@ -571,10 +572,9 @@ var translations = new
 
         /**
          * Setts event listener
-         * @param {String}   event    - name of event expected to be dispatched by the class
          * @param {Function} listener - listener for event
          */
-        this.addEventListener = function(event, listener)
+        this.addEventListener = function(listener)
         {
             listeners.push(listener);
         }
@@ -609,6 +609,17 @@ var translations = new
                         DOM.buttons.push(button);
                     }).bind(this));
                 change(languages[0]);
+            }).bind(this)});
+
+        /**
+         * Getter for the current language property
+         * @return {String|Null} - current choosed language or null if no languages were added
+         */
+        Object.defineProperty(this, "current", {get:
+            (function()
+            {
+                var active = DOM.container.querySelector(".translations__button--active");
+                return active ? active.name : null;
             }).bind(this)});
 
         /**
@@ -1215,7 +1226,7 @@ function State(parent, tests)
             {
                 classList: ["state__button", "state__start"],
                 eventListeners: {"click": next.bind(this)}
-            }, "Начать тестирование");
+            }, strings[translations.current].start);
     }
     
     /**
@@ -1232,6 +1243,38 @@ function State(parent, tests)
     }
     
     /**
+     * Translated strings
+     * @type {Array}
+     */
+    var strings =
+        {
+            "EN": {again: "Repeat", next: "Next >", start: "Start testing"},
+            "RU": {again: "Ещё раз", next: "Следующий >", start: "Начать тестирование"}
+        };
+
+    /**
+     * Translates all strings in the class to given language
+     * @param {String} language - language to change strings
+     */
+    function translate(language)
+    {
+        var start = document.querySelector(".state__start");
+        if (start)
+        {
+            start.innerHTML = strings[translations.current].start;
+        }
+
+        if (current == -1 && !start)
+        {
+            DOM.next.innerHTML = strings[translations.current].again;
+        }
+        else
+        {
+            DOM.next.innerHTML = strings[translations.current].next;
+        }
+    }
+
+    /**
      * Freed ability (makes button active) to go to the next test.
      * Calls by function run stored in the tests array when test is done
      * @callback run
@@ -1240,7 +1283,7 @@ function State(parent, tests)
     {
         if (current == tests.length - 1)
         {
-            DOM.next.innerHTML = "Ещё раз";
+            DOM.next.innerHTML = strings[translations.current].again;
             current = -1;
         }
         
@@ -1270,7 +1313,8 @@ function State(parent, tests)
     
     DOM.container = parent.newChildElement("div", {classList: "state__container"});
     DOM.current = DOM.container.newChildElement("span", {classList: "state__name"}, "");
-    DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, "Следующий >");
+    DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, strings[translations.current].next);
+    translations.addEventListener(translate.bind(this));
     next();
 }
 

@@ -18,7 +18,7 @@ function State(parent, tests)
             {
                 classList: ["state__button", "state__start"],
                 eventListeners: {"click": next.bind(this)}
-            }, "Начать тестирование");
+            }, strings[translations.current].start);
     }
     
     /**
@@ -35,6 +35,38 @@ function State(parent, tests)
     }
     
     /**
+     * Translated strings
+     * @type {Array}
+     */
+    var strings =
+        {
+            "EN": {again: "Repeat", next: "Next >", start: "Start testing"},
+            "RU": {again: "Ещё раз", next: "Следующий >", start: "Начать тестирование"}
+        };
+
+    /**
+     * Translates all strings in the class to given language
+     * @param {String} language - language to change strings
+     */
+    function translate(language)
+    {
+        var start = document.querySelector(".state__start");
+        if (start)
+        {
+            start.innerHTML = strings[translations.current].start;
+        }
+
+        if (current == -1 && !start)
+        {
+            DOM.next.innerHTML = strings[translations.current].again;
+        }
+        else
+        {
+            DOM.next.innerHTML = strings[translations.current].next;
+        }
+    }
+
+    /**
      * Freed ability (makes button active) to go to the next test.
      * Calls by function run stored in the tests array when test is done
      * @callback run
@@ -43,7 +75,7 @@ function State(parent, tests)
     {
         if (current == tests.length - 1)
         {
-            DOM.next.innerHTML = "Ещё раз";
+            DOM.next.innerHTML = strings[translations.current].again;
             current = -1;
         }
         
@@ -73,6 +105,7 @@ function State(parent, tests)
     
     DOM.container = parent.newChildElement("div", {classList: "state__container"});
     DOM.current = DOM.container.newChildElement("span", {classList: "state__name"}, "");
-    DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, "Следующий >");
+    DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, strings[translations.current].next);
+    translations.addEventListener(translate.bind(this));
     next();
 }
