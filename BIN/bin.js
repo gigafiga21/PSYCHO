@@ -586,6 +586,32 @@ var translations = new
         var listeners = [];
 
         /**
+         * Available languages
+         * @type {Array[Strings]}
+         */
+        var languages = [];
+
+        /**
+         * Setter for languages property
+         * Redraws DOM element with languages selection and setts first given as current
+         * @type {Function}
+         */
+        Object.defineProperty(this, "languages", {set:
+            (function(langs)
+            {
+                DOM.container.innerHTML = "";
+                languages = langs;
+                languages.forEach(
+                    (function(name)
+                    {
+                        var button = DOM.container.newChildElement("button", {classList: "translations__button", name: name}, name);
+                        button.addEventListener("click", change.bind(this, name));
+                        DOM.buttons.push(button);
+                    }).bind(this));
+                change(languages[0]);
+            }).bind(this)});
+
+        /**
          * DOM tree of the class
          * @type {Object}
          */
@@ -596,15 +622,6 @@ var translations = new
             };
 
         DOM.container = document.body.newChildElement("div", {classList: "translations__container"});
-        ["EN", "RU"].forEach(
-            (function(name)
-            {
-                var button = DOM.container.newChildElement("button", {classList: "translations__button", name: name}, name);
-                button.addEventListener("click", change.bind(this, name));
-                DOM.buttons.push(button);
-            }).bind(this));
-
-        change("EN");
     })();
 
 /**
@@ -1588,5 +1605,6 @@ var tests =
         }
     ];
 
+translations.languages = ["EN", "RU"];
 var state = new State(document.body, tests);
 

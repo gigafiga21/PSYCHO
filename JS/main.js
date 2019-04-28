@@ -226,4 +226,5 @@ var tests =
         }
     ];
 
+translations.languages = ["EN", "RU"];
 var state = new State(document.body, tests);
