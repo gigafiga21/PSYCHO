@@ -1,5 +1,6 @@
 /**
- * Singleton keeps all strings used for translation
+ * Singleton tracking signal of changing language
+ * When language is changed, listener will be called. To get translation bind it to the listener function.
  * @type {Object}
  */
 var translations = new
@@ -33,7 +34,7 @@ var translations = new
 
         /**
          * Setts event listener
-         * @param {String}   event    - name of event expected to be dispatched by the class
+         * @param {String}   event    - name of event expected to be dispatched by the class ("changed")
          * @param {Function} listener - listener for event
          */
         this.addEventListener = function(event, listener)
