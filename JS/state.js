@@ -24,7 +24,7 @@ function State(parent, tests)
     /**
      * Switches to the next test
      */
-    function()
+    function next()
     {
         current++;
         frame.free();
