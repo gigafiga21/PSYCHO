@@ -34,10 +34,9 @@ var translations = new
 
         /**
          * Setts event listener
-         * @param {String}   event    - name of event expected to be dispatched by the class ("changed")
          * @param {Function} listener - listener for event
          */
-        this.addEventListener = function(event, listener)
+        this.addEventListener = function(listener)
         {
             listeners.push(listener);
         }
@@ -72,6 +71,17 @@ var translations = new
                         DOM.buttons.push(button);
                     }).bind(this));
                 change(languages[0]);
+            }).bind(this)});
+
+        /**
+         * Getter for the current language property
+         * @return {String|Null} - current choosed language or null if no languages were added
+         */
+        Object.defineProperty(this, "current", {get:
+            (function()
+            {
+                var active = DOM.container.querySelector(".translations__button--active");
+                return active ? active.name : null;
             }).bind(this)});
 
         /**
