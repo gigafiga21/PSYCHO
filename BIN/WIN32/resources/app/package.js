@@ -2,9 +2,9 @@ var installer = require('electron-winstaller');
 var path      = require('path');
 const dialog  = require('electron').dialog;
 
-console.log("packaging into a exe...\n");
+console.log("packaging into an exe...\n");
 resultPromise = installer.createWindowsInstaller({
-    appDirectory: './tests-win32-ia32',
+    appDirectory: './WIN32',
     authors: 'gigafiga21',
 });
 
