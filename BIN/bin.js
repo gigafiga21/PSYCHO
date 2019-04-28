@@ -562,7 +562,28 @@ var translations = new
             }
 
             next.classList.add("translations__button--active");
+            listeners.forEach(
+                function(listener)
+                {
+                    listener(language);
+                });
         }
+
+        /**
+         * Setts event listener
+         * @param {String}   event    - name of event expected to be dispatched by the class
+         * @param {Function} listener - listener for event
+         */
+        this.addEventListener = function(event, listener)
+        {
+            listeners.push(listener);
+        }
+
+        /**
+         * Listeners for language changing event
+         * @type {Array[Functions]}
+         */
+        var listeners = [];
 
         /**
          * DOM tree of the class
