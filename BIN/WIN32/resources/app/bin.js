@@ -5,7 +5,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		PolyK library
 		url: http://polyk.ivank.net
 		Released under MIT licence.
-		
+
 		Copyright (c) 2012 - 2014 Ivan Kuckir
 
 		Permission is hereby granted, free of charge, to any person
@@ -28,18 +28,18 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 		OTHER DEALINGS IN THE SOFTWARE.
-		
+
 		19. 5. 2014 - Problem with slicing fixed.
 	*/
 
 	var PolyK = {};
-	
+
 	/*
 		Is Polygon self-intersecting?
-		
+
 		O(n^2)
 	*/
-	
+
 	PolyK.IsSimple = function(p)
 	{
 		var n = p.length>>1;
@@ -47,31 +47,31 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		var a1 = new PolyK._P(), a2 = new PolyK._P();
 		var b1 = new PolyK._P(), b2 = new PolyK._P();
 		var c = new PolyK._P();
-		
+
 		for(var i=0; i<n; i++)
 		{
 			a1.x = p[2*i  ];
 			a1.y = p[2*i+1];
 			if(i==n-1)	{ a2.x = p[0    ];  a2.y = p[1    ]; }
 			else		{ a2.x = p[2*i+2];  a2.y = p[2*i+3]; }
-			
+
 			for(var j=0; j<n; j++)
 			{
 				if(Math.abs(i-j) < 2) continue;
 				if(j==n-1 && i==0) continue;
 				if(i==n-1 && j==0) continue;
-				
+
 				b1.x = p[2*j  ];
 				b1.y = p[2*j+1];
 				if(j==n-1)	{ b2.x = p[0    ];  b2.y = p[1    ]; }
 				else		{ b2.x = p[2*j+2];  b2.y = p[2*j+3]; }
-				
+
 				if(PolyK._GetLineIntersection(a1,a2,b1,b2,c) != null) return false;
 			}
 		}
 		return true;
 	}
-	
+
 	PolyK.IsConvex = function(p)
 	{
 		if(p.length<6) return true;
@@ -82,7 +82,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		if(!PolyK._convex(p[l+2], p[l+3], p[0  ], p[1  ], p[2], p[3])) return false;
 		return true;
 	}
-	
+
 	PolyK.GetArea = function(p)
 	{
 		if(p.length <6) return 0;
@@ -93,10 +93,10 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		sum += (p[0]-p[l]) * (p[l+1]+p[1]);
 		return - sum * 0.5;
 	}
-	
+
 	PolyK.GetAABB = function(p)
 	{
-		var minx = Infinity; 
+		var minx = Infinity;
 		var miny = Infinity;
 		var maxx = -minx;
 		var maxy = -miny;
@@ -109,14 +109,14 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		}
 		return {x:minx, y:miny, width:maxx-minx, height:maxy-miny};
 	}
-	
+
 	PolyK.Reverse = function(p)
 	{
 		var np = [];
 		for(var j=p.length-2; j>=0; j-=2)  np.push(p[j], p[j+1])
 		return np;
 	}
-	
+
 
 	PolyK.Triangulate = function(p)
 	{
@@ -125,7 +125,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		var tgs = [];
 		var avl = [];
 		for(var i=0; i<n; i++) avl.push(i);
-		
+
 		var i = 0;
 		var al = n;
 		while(al > 3)
@@ -133,11 +133,11 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			var i0 = avl[(i+0)%al];
 			var i1 = avl[(i+1)%al];
 			var i2 = avl[(i+2)%al];
-			
+
 			var ax = p[2*i0],  ay = p[2*i0+1];
 			var bx = p[2*i1],  by = p[2*i1+1];
 			var cx = p[2*i2],  cy = p[2*i2+1];
-			
+
 			var earFound = false;
 			if(PolyK._convex(ax, ay, bx, by, cx, cy))
 			{
@@ -161,12 +161,12 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		tgs.push(avl[0], avl[1], avl[2]);
 		return tgs;
 	}
-	
+
 	PolyK.ContainsPoint = function(p, px, py)
 	{
 		var n = p.length>>1;
 		var ax, ay = p[2*n-3]-py, bx = p[2*n-2]-px, by = p[2*n-1]-py;
-		
+
 		//var lup = by > ay;
 		for(var i=0; i<n; i++)
 		{
@@ -176,7 +176,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			if(ay==by) continue;
 			lup = by>ay;
 		}
-		
+
 		var depth = 0;
 		for(var i=0; i<n; i++)
 		{
@@ -186,10 +186,10 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			if(ay< 0 && by< 0) continue;	// both "up" or both "down"
 			if(ay> 0 && by> 0) continue;	// both "up" or both "down"
 			if(ax< 0 && bx< 0) continue; 	// both points on the left
-			
+
 			if(ay==by && Math.min(ax,bx)<=0) return true;
 			if(ay==by) continue;
-			
+
 			var lx = ax + (bx-ax)*(-ay)/(by-ay);
 			if(lx==0) return true;			// point on edge
 			if(lx> 0) depth++;
@@ -200,7 +200,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		//console.log(depth);
 		return (depth & 1) == 1;
 	}
-	
+
 	PolyK.Slice = function(p, ax, ay, bx, by)
 	{
 		if(PolyK.ContainsPoint(p, ax, ay) || PolyK.ContainsPoint(p, bx, by)) return [p.slice(0)];
@@ -210,7 +210,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		var iscs = [];	// intersections
 		var ps = [];	// points
 		for(var i=0; i<p.length; i+=2) ps.push(new PolyK._P(p[i], p[i+1]));
-		
+
 		for(var i=0; i<ps.length; i++)
 		{
 			var isc = new PolyK._P(0,0);
@@ -225,13 +225,13 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 				i++;
 			}
 		}
-		
+
 		if(iscs.length <2) return [p.slice(0)];
 		var comp = function(u,v) { return PolyK._P.dist(a,u) - PolyK._P.dist(a,v); }
 		iscs.sort(comp);
-		
+
 		//console.log("Intersections: "+iscs.length, JSON.stringify(iscs));
-		
+
 		var pgs = [];
 		var dir = 0;
 		while(iscs.length > 0)
@@ -243,9 +243,9 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			var ind0 = ps.indexOf(i0);
 			var ind1 = ps.indexOf(i1);
 			var solved = false;
-			
+
 			//console.log(i0, i1);
-			
+
 			if(PolyK._firstWithFlag(ps, ind0) == ind1) solved = true;
 			else
 			{
@@ -278,19 +278,19 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		}
 		return result;
 	}
-	
+
 	PolyK.Raycast = function(p, x, y, dx, dy, isc)
 	{
 		var l = p.length - 2;
 		var tp = PolyK._tp;
-		var a1 = tp[0], a2 = tp[1], 
+		var a1 = tp[0], a2 = tp[1],
 		b1 = tp[2], b2 = tp[3], c = tp[4];
 		a1.x = x; a1.y = y;
 		a2.x = x+dx; a2.y = y+dy;
-		
+
 		if(isc==null) isc = {dist:0, edge:0, norm:{x:0, y:0}, refl:{x:0, y:0}};
 		isc.dist = Infinity;
-		
+
 		for(var i=0; i<l; i+=2)
 		{
 			b1.x = p[i  ];  b1.y = p[i+1];
@@ -302,21 +302,21 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		b2.x = p[0];  b2.y = p[1];
 		var nisc = PolyK._RayLineIntersection(a1, a2, b1, b2, c);
 		if(nisc) PolyK._updateISC(dx, dy, a1, b1, b2, c, (p.length/2)-1, isc);
-		
+
 		return (isc.dist != Infinity) ? isc : null;
 	}
-	
+
 	PolyK.ClosestEdge = function(p, x, y, isc)
 	{
 		var l = p.length - 2;
 		var tp = PolyK._tp;
-		var a1 = tp[0], 
+		var a1 = tp[0],
 		b1 = tp[2], b2 = tp[3], c = tp[4];
 		a1.x = x; a1.y = y;
-		
+
 		if(isc==null) isc = {dist:0, edge:0, point:{x:0, y:0}, norm:{x:0, y:0}};
 		isc.dist = Infinity;
-		
+
 		for(var i=0; i<l; i+=2)
 		{
 			b1.x = p[i  ];  b1.y = p[i+1];
@@ -326,13 +326,13 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		b1.x = b2.x;  b1.y = b2.y;
 		b2.x = p[0];  b2.y = p[1];
 		PolyK._pointLineDist(a1, b1, b2, l>>1, isc);
-		
+
 		var idst = 1/isc.dist;
 		isc.norm.x = (x-isc.point.x)*idst;
 		isc.norm.y = (y-isc.point.y)*idst;
 		return isc;
 	}
-    
+
     PolyK.Move = function(p, nx, ny)
     {
         var p1 = [],
@@ -348,11 +348,11 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 
         return p1;
     }
-	
+
 	PolyK._pointLineDist = function(p, a, b, edge, isc)
 	{
 		var x = p.x, y = p.y, x1 = a.x, y1 = a.y, x2 = b.x, y2 = b.y;
-		
+
 		var A = x - x1;
 		var B = y - y1;
 		var C = x2 - x1;
@@ -388,7 +388,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			isc.point.y = yy;
 		}
 	}
-	
+
 	PolyK._updateISC = function(dx, dy, a1, b1, b2, c, edge, isc)
 	{
 		var nrl = PolyK._P.dist(a1, c);
@@ -399,14 +399,14 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			var ny =  (b2.x-b1.x)*ibl;
 			var ddot = 2*(dx*nx+dy*ny);
 			isc.dist = nrl;
-			isc.norm.x = nx;  
-			isc.norm.y = ny; 
+			isc.norm.x = nx;
+			isc.norm.y = ny;
 			isc.refl.x = -ddot*nx+dx;
 			isc.refl.y = -ddot*ny+dy;
 			isc.edge = edge;
 		}
 	}
-	
+
 	PolyK._getPoints = function(ps, ind0, ind1)
 	{
 		var n = ps.length;
@@ -415,7 +415,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		for(var i=ind0; i<= ind1; i++) nps.push(ps[i%n]);
 		return nps;
 	}
-	
+
 	PolyK._firstWithFlag = function(ps, ind)
 	{
 		var n = ps.length;
@@ -425,7 +425,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 			if(ps[ind].flag) return ind;
 		}
 	}
-	
+
 	PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)
 	{
 		var v0x = cx-ax;
@@ -434,13 +434,13 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		var v1y = by-ay;
 		var v2x = px-ax;
 		var v2y = py-ay;
-		
+
 		var dot00 = v0x*v0x+v0y*v0y;
 		var dot01 = v0x*v1x+v0y*v1y;
 		var dot02 = v0x*v2x+v0y*v2y;
 		var dot11 = v1x*v1x+v1y*v1y;
 		var dot12 = v1x*v2x+v1y*v2y;
-		
+
 		var invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
 		var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 		var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
@@ -448,7 +448,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		// Check if point is in triangle
 		return (u >= 0) && (v >= 0) && (u + v < 1);
 	}
-	
+
 	PolyK._RayLineIntersection = function(a1, a2, b1, b2, c)
 	{
 		var dax = (a1.x-a2.x), dbx = (b1.x-b2.x);
@@ -456,21 +456,21 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 
 		var Den = dax*dby - day*dbx;
 		if (Den == 0) return null;	// parallel
-		
+
 		var A = (a1.x * a2.y - a1.y * a2.x);
 		var B = (b1.x * b2.y - b1.y * b2.x);
-		
+
 		var I = c;
 		var iDen = 1/Den;
 		I.x = ( A*dbx - dax*B ) * iDen;
 		I.y = ( A*dby - day*B ) * iDen;
-		
+
 		if(!PolyK._InRect(I, b1, b2)) return null;
-		if((day>0 && I.y>a1.y) || (day<0 && I.y<a1.y)) return null; 
-		if((dax>0 && I.x>a1.x) || (dax<0 && I.x<a1.x)) return null; 
+		if((day>0 && I.y>a1.y) || (day<0 && I.y<a1.y)) return null;
+		if((dax>0 && I.x>a1.x) || (dax<0 && I.x<a1.x)) return null;
 		return I;
 	}
-	
+
 	PolyK._GetLineIntersection = function(a1, a2, b1, b2, c)
 	{
 		var dax = (a1.x-a2.x), dbx = (b1.x-b2.x);
@@ -478,35 +478,35 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 
 		var Den = dax*dby - day*dbx;
 		if (Den == 0) return null;	// parallel
-		
+
 		var A = (a1.x * a2.y - a1.y * a2.x);
 		var B = (b1.x * b2.y - b1.y * b2.x);
-		
+
 		var I = c;
 		I.x = ( A*dbx - dax*B ) / Den;
 		I.y = ( A*dby - day*B ) / Den;
-		
+
 		if(PolyK._InRect(I, a1, a2) && PolyK._InRect(I, b1, b2)) return I;
 		return null;
 	}
-	
+
 	PolyK._InRect = function(a, b, c)	// a in rect (b,c)
 	{
 		var minx = Math.min(b.x,c.x), maxx = Math.max(b.x,c.x);
 		var miny = Math.min(b.y,c.y), maxy = Math.max(b.y,c.y);
-		
+
 		if	(minx == maxx) return (miny<=a.y && a.y<=maxy);
 		if	(miny == maxy) return (minx<=a.x && a.x<=maxx);
-		
+
 		//return (minx <= a.x && a.x <= maxx && miny <= a.y && a.y <= maxy)
-		return (minx <= a.x+1e-10 && a.x-1e-10 <= maxx && miny <= a.y+1e-10 && a.y-1e-10 <= maxy) ;		
+		return (minx <= a.x+1e-10 && a.x-1e-10 <= maxx && miny <= a.y+1e-10 && a.y-1e-10 <= maxy) ;
 	}
-	
+
 	PolyK._convex = function(ax, ay, bx, by, cx, cy)
 	{
 		return (ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0;
 	}
-		
+
 	PolyK._P = function(x,y)
 	{
 		this.x = x;
@@ -523,7 +523,7 @@ function isFunction(e){return e instanceof Function}function isArray(e){return e
 		var dy = b.y-a.y;
 		return Math.sqrt(dx*dx + dy*dy);
 	}
-	
+
 	PolyK._tp = [];
 	for(var i=0; i<10; i++) PolyK._tp.push(new PolyK._P(0,0));
 var rand = Math.random;
@@ -533,7 +533,7 @@ Math.random = function(min, max)
     {
         return rand();
     }
-    
+
     return min + rand() * (max + 1 - min);
 }
 /**
@@ -652,19 +652,19 @@ function Puzzle(parent)
         var angles = Math.random(3, 6),
             path = [],
             fullAngle = 0;
-        
+
         for (var counter = 0; counter < angles; counter++)
         {
             var angle = Math.floor(Math.random(270 / angles, 360 / angles));
-            
+
             fullAngle += angle;
             path.push(125 + 75 * Math.round(Math.cos(fullAngle * Math.PI / 180)));
             path.push(150 + 75 * Math.round(Math.sin(fullAngle * Math.PI / 180)));
         }
-        
+
         return path;
     }
-    
+
     /**
      * Splitts main polygon into the puzzles
      * @param  {Array} polygon - flat array with coords of polygon
@@ -673,13 +673,13 @@ function Puzzle(parent)
     function splitMainFigure(polygon)
     {
         var slices = [];
-        
+
         for (var counter = 0; counter < 3; counter++)
         {
             var box = PolyK.GetAABB(polygon),
                 center = {x: box.x + box.width / 2, y: box.y + box.height / 2},
                 angle, a = {}, b = {};
-            
+
             if (counter % 2 == 0)
             {
                 angle = Math.floor(Math.random(0, Math.PI / 9 * 4));
@@ -688,10 +688,10 @@ function Puzzle(parent)
             {
                 angle = Math.floor(Math.random(Math.PI / 9 * 5, Math.PI / 18 * 17));
             }
-            
+
             a = {x: box.x + box.width + 10, y: Math.tan(angle) * (box.x + 10 + box.width - center.x) + center.y};
             b = {x: box.x - 10, y: Math.tan(angle) * (box.x - 10 - center.x) + center.y};
-            
+
             var sliced = PolyK.Slice(polygon, a.x, a.y, b.x, b.y);
             if (sliced.length == 2)
             {
@@ -699,11 +699,11 @@ function Puzzle(parent)
                 polygon = sliced[1];
             }
         }
-        
+
         slices.push(polygon);
         return slices;
     }
-    
+
     /**
      * Draggs puzzle piece while the mouse is down on it
      * @type {Function}
@@ -716,18 +716,18 @@ function Puzzle(parent)
             point = {x: event.pageX - canvasCoords.left, y: event.pageY - canvasCoords.top},
             index = Number(dragging.getAttribute("index")),
             w = DOM.canvas.clientWidth;
-        
+
         if (!PolyK.ContainsPoint([0, 0, w, 0, w, 300, 0, 300], box.x, box.y) ||
             !PolyK.ContainsPoint([0, 0, w, 0, w, 300, 0, 300], box.x + box.width, box.y + box.height))
         {
             document.body.dispatchEvent(new Event("mouseup"));
             return;
         }
-        
+
         points = PolyK.Move(points, point.x - puzzles[index].cursorX, point.y - puzzles[index].cursorY);
         dragging.setAttribute("points", points);
     }).bind(this);
-    
+
     /**
      * Releases dragging of the puzzle piece
      * If piece was release at right place - will be fixed, else - returned to where it was before dragging
@@ -738,13 +738,13 @@ function Puzzle(parent)
         var index = Number(dragging.getAttribute("index")),
             points = dragging.getAttribute("points").split(","),
             box = PolyK.GetAABB(points);
-        
+
         if (Math.abs(puzzles[index].x0 - box.x) < 11 && Math.abs(puzzles[index].y0 - box.y) < 11)
         {
             dragging.setAttribute("points", PolyK.Move(points, puzzles[index].x0, puzzles[index].y0));
             dragging.removeEventListener("mousedown", grab);
             steps--;
-            
+
             if (steps == 0)
             {
                 DOM.canvas.innerHTML = "";
@@ -757,12 +757,12 @@ function Puzzle(parent)
         {
             dragging.setAttribute("points", PolyK.Move(dragging.getAttribute("points").split(","), puzzles[index].x, puzzles[index].y));
         }
-        
+
         document.body.removeEventListener("mousemove", drag);
         document.body.removeEventListener("mouseup", drop);
         dragging = null;
     }).bind(this);
-    
+
     /**
      * Enables dragging of the puzzle piece after mouse is down on it
      * @type {Function}
@@ -773,51 +773,51 @@ function Puzzle(parent)
         dragging.addEventListener("mousedown", grab);
         DOM.canvas.removeChild(event.target);
         DOM.canvas.appendChild(dragging);
-        
+
         var box = PolyK.GetAABB(dragging.getAttribute("points").split(",")),
             canvasCoords = DOM.canvas.getBoundingClientRect(),
             index = Number(dragging.getAttribute("index"));
-        
+
         document.body.addEventListener("mousemove", drag);
         document.body.addEventListener("mouseup", drop);
-        
+
         puzzles[index].cursorX = (event.pageX - canvasCoords.left) - box.x;
         puzzles[index].cursorY = (event.pageY - canvasCoords.top) - box.y
     }).bind(this);
-    
+
     /**
      * Generates SVG canvas and draws puzzle on it
      */
     function drawPuzzle()
     {
         var polygon = generateMainFigure();
-        
+
         var polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         polygonElement.classList.add("puzzle__frame");
         polygonElement.setAttribute("points", polygon);
         DOM.canvas.appendChild(polygonElement);
-        
+
         var slices = splitMainFigure(polygon).sort(
             function()
             {
                 return Math.random() - 0.5;
             }),
             edge = {x: 205, y: 75, xMax: 0};
-        
+
         steps = slices.length;
-        
+
         for (var counter = 0; counter < slices.length; counter++)
         {
             var box = PolyK.GetAABB(slices[counter]),
                 info = {x0: box.x, y0: box.y, id: counter};
-            
+
             if (box.height < 230 - edge.y)
             {
                 slices[counter] = PolyK.Move(slices[counter], edge.x, edge.y);
                 info.x = edge.x;
                 info.y = edge.y;
                 edge.y = edge.y + box.height + 5;
-                
+
                 if (box.width + edge.x > edge.xMax)
                 {
                     edge.xMax = box.width + edge.x;
@@ -832,9 +832,9 @@ function Puzzle(parent)
                 info.x = edge.x;
                 info.y = 75;
             }
-            
+
             puzzles.push(info);
-            
+
             var puzzle = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
             puzzle.classList.add("puzzle__puzzle");
             puzzle.setAttribute("points", slices[counter]);
@@ -842,10 +842,10 @@ function Puzzle(parent)
             puzzle.addEventListener("mousedown", grab);
             DOM.canvas.appendChild(puzzle);
         }
-        
+
         DOM.canvas.style.width = edge.xMax + 50 + "px";
     }
-    
+
     /**
      * Releases grabbed puzzle piece
      */
@@ -853,7 +853,7 @@ function Puzzle(parent)
     {
         document.body.dispatchEvent(new Event("mouseup"));
     }
-    
+
     /**
      * Returns amount of solved puzzles
      * @return {Number}
@@ -862,12 +862,12 @@ function Puzzle(parent)
     {
         return score;
     }
-    
+
     /**
      * DOM tree of the class
      * @type {Object}
      */
-    var DOM = 
+    var DOM =
         {
             canvas: null
         };
@@ -882,7 +882,7 @@ function Puzzle(parent)
         steps = 0,
         dragging = null,
         score = 0;
-    
+
     DOM.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     DOM.canvas.classList.add("puzzle__canvas");
     parent.appendChild(DOM.canvas);
@@ -916,7 +916,7 @@ function Ariphmetics(parent)
                 b: null,
                 result: null
             };
-        
+
         switch (equotation.operation)
         {
             case "+":
@@ -939,10 +939,10 @@ function Ariphmetics(parent)
                 equotation.b = Math.floor(Math.random(2, 100 / equotation.result));
                 equotation.a = equotation.result * equotation.b;
         }
-        
+
         return equotation;
     }
-    
+
     /**
      * Randomly generates wrong solutions for given equatation
      * @param {Number} seed - right solution of the equatation
@@ -950,7 +950,7 @@ function Ariphmetics(parent)
     function generateAnswers(seed)
     {
         var answers = [];
-        
+
         for (var counter = 1; counter < 99; counter++)
         {
             if (counter != seed)
@@ -958,15 +958,15 @@ function Ariphmetics(parent)
                 answers.push(counter);
             }
         }
-        
+
         answers.sort(function()
             {
                 return Math.random() - 0.5;
             });
-        
+
         return answers.slice(0, 2);
     }
-    
+
     /**
      * Fills DOM of the class instance with generated equatation and solutions
      */
@@ -975,24 +975,24 @@ function Ariphmetics(parent)
         var equotation = generateEquotation(),
             answers = generateAnswers(equotation.result),
             right = Math.floor(Math.random(0, answers.length));
-        
+
         answers.splice(right, 0, equotation.result);
         DOM.equotation.innerHTML = equotation.a + " " + equotation.operation + " " + equotation.b + " =";
-        
+
         for (var counter = 0; counter < answers.length; counter++)
         {
             var answer = DOM.answers.newChildElement("button", {classList: "ariphmetics__checkbox"});
             answer.addEventListener("click", checkAnswer.bind(this));
             DOM.answers.newChildElement("span", {}, "" + answers[counter]);
             DOM.answers.newChildElement("br");
-            
+
             if (answers[counter] == equotation.result)
             {
                 answer.setAttribute("NAME", "RIGHT");
             }
         }
     }
-    
+
     function checkAnswer(event)
     {
         if (event.target.getAttribute("NAME") == "RIGHT")
@@ -1004,7 +1004,7 @@ function Ariphmetics(parent)
         DOM.equotation.innerHTML = "";
         generateTask();
     }
-    
+
     /**
      * Returns amount of equatations solved right
      * @return {Number}
@@ -1013,7 +1013,7 @@ function Ariphmetics(parent)
     {
         return score;
     }
-    
+
     /**
      * DOM tree of the class
      * @type {Object}
@@ -1024,17 +1024,17 @@ function Ariphmetics(parent)
             equotation: null,
             answers: null
         };
-    
+
     /**
      * Amount of given right solutions
      * @type {Number}
      */
     var score = 0;
-    
+
     DOM.container = parent.newChildElement("div", {classList: "ariphmetics__container"});
     DOM.equotation = DOM.container.newChildElement("div", {classList: "ariphmetics__equotation"});
     DOM.answers = DOM.container.newChildElement("div");
-    
+
     generateTask();
 }
 
@@ -1055,7 +1055,7 @@ function Concentration(parent, time)
         DOM.point.style.left = Math.floor(Math.random(5, 565)) + "px";
         DOM.point.style.top = Math.floor(Math.random(5, 260)) + "px";
     }
-    
+
     /**
      * Removes previously drawed dot and setts timeout for drawing next one randomly
      */
@@ -1074,7 +1074,7 @@ function Concentration(parent, time)
         {
             first = false;
         }
-            
+
         timer = setTimeout(
             function()
             {
@@ -1082,7 +1082,7 @@ function Concentration(parent, time)
                 drawPoint();
             }, Math.floor(Math.random(0, time / 4)));
     }
-    
+
     /**
      * Removes processing timeout for dot drawing
      * Calls when class instance was destroyed by removing game from screen
@@ -1095,7 +1095,7 @@ function Concentration(parent, time)
             document.body.removeEventListener("keyup", getCode);
         }
     }
-    
+
     /**
      * Processes button click when 'Enter' is pressed
      * @type {Function}
@@ -1107,7 +1107,7 @@ function Concentration(parent, time)
             DOM.button.dispatchEvent(new Event("click"));
         }
     }).bind(this);
-    
+
     /**
      * @var {Number} timer - id of the processing dot drawing timer
      * @var {Bool}   first - flag for avoiding removing unexisting dot when regenerating it first time
@@ -1122,7 +1122,7 @@ function Concentration(parent, time)
             field: null,
             point: null
         };
-    
+
     DOM.container = parent.newChildElement("div", {classList: "concentration__container"});
     DOM.field = DOM.container.newChildElement("div", {classList: "concentration__field"});
     generatePoint();
@@ -1171,10 +1171,10 @@ function Breaker(parent)
         {
             DOM.container.setCSS("breaker__container--hidden");
         }
-        
+
         hidden = !hidden;
     }
-    
+
     /**
      * Setts time for the break
      * @param {Number} time - amount of time for the break
@@ -1183,7 +1183,7 @@ function Breaker(parent)
     {
         DOM.time.innerHTML = time + "s";
     }
-    
+
     /**
      * @var {Object} DOM    - DOM tree of the class
      * @var {Bool}   hidden - flag for indicating visibility
@@ -1195,7 +1195,7 @@ function Breaker(parent)
             time: null
         },
         hidden = true;
-    
+
     DOM.container = parent.newChildElement("div", {classList: ["breaker__container", "breaker__container--hidden"]});
     DOM.text = DOM.container.newChildElement("span", {classList: "breaker__text"}, strings[translations.current].rest);
     DOM.time = DOM.container.newChildElement("span", {classList: "breaker__time"});
@@ -1239,7 +1239,7 @@ function Score(parent, score)
             header: null,
             score: null
         };
-    
+
     DOM.container = parent.newChildElement("div", {classList: "score__container"});
     DOM.header = DOM.container.newChildElement("span", {classList: "score__header"}, strings[translations.current].score);
     DOM.score = DOM.container.newChildElement("span", {classList: "score__result"}, "" + score);
@@ -1268,7 +1268,7 @@ function State(parent, tests)
                 eventListeners: {"click": next.bind(this)}
             }, strings[translations.current].start);
     }
-    
+
     /**
      * Switches to the next test
      */
@@ -1278,10 +1278,10 @@ function State(parent, tests)
         frame.free();
         DOM.current.innerHTML = "#" + tests[current].name;
         DOM.next.disabled = true;
-        
+
         tests[current].run(frame, this);
     }
-    
+
     /**
      * Translated strings
      * @type {Array}
@@ -1326,10 +1326,10 @@ function State(parent, tests)
             DOM.next.innerHTML = strings[translations.current].again;
             current = -1;
         }
-        
+
         DOM.next.disabled = false;
     }
-    
+
     /**
      * DOM tree of the class
      * @type {Object}
@@ -1341,16 +1341,16 @@ function State(parent, tests)
             next: null,
             frame: null
         };
-    
+
     /**
      * @var {Number} current - current test index
      * @var {Test}   frame   - container class for test
      */
     var current = -1,
         frame = new Test(document.body);
-    
+
     tests.splice(0, 0, {name: "0", run: generateStartScreen.bind(this)});
-    
+
     DOM.container = parent.newChildElement("div", {classList: "state__container"});
     DOM.current = DOM.container.newChildElement("span", {classList: "state__name"}, "");
     DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, strings[translations.current].next);
@@ -1375,14 +1375,14 @@ function Test(parent)
         {
             return;
         }
-        
+
         var element = DOM.container.rows[0].cells[active],
             cellCentered = (document.body.clientWidth - element.clientWidth) / 2,
             containerDelta = DOM.container.getBoundingClientRect().left - element.getBoundingClientRect().left;
-        
+
         DOM.container.style.left = cellCentered - element.offsetLeft + "px";
     }).bind(this);
-    
+
     /**
      * Covers inactive screen with transparent block to prevent activating inner screen elements
      * @param {*} index - index of screen to cover
@@ -1393,7 +1393,7 @@ function Test(parent)
         DOM.container.rows[0].cells[index].appendChild(DOM.inactive.cloneNode(true));
         DOM.container.rows[0].cells[index].setCSS("test__inactive");
     }
-    
+
     /**
      * Removes coverage and makesw screen active
      * @param {*} index - index of screen to make active
@@ -1404,14 +1404,14 @@ function Test(parent)
         index = Number(index);
         center();
         DOM.container.rows[0].cells[index].removeCSS("test__inactive");
-        
+
         var cover = DOM.container.rows[0].cells[index].getElementsByClassName("test__inactive_cover")[0];
         if (cover)
         {
             DOM.container.rows[0].cells[index].removeChild(cover);
         }
     }
-    
+
     /**
      * Adds screen to the container
      * @param  {*}      index         - index of the screen
@@ -1423,15 +1423,15 @@ function Test(parent)
         var cell = DOM.container.rows[0].insertCell(index);
         cell.setAttribute("index", index);
         cell.setCSS("test__cell");
-        
+
         if (isUnresizable)
         {
             isResizable = false;
         }
-        
+
         return cell;
     }
-    
+
     /**
      * Removes all inserted screens
      */
@@ -1442,7 +1442,7 @@ function Test(parent)
         DOM.container.style.left = null;
         DOM.container.rows[0].innerHTML = "";
     }
-    
+
     /**
      * @var {Bool}   isResizable - is current screen resizable
      * @var {*}      active      - index of an active screen
@@ -1455,7 +1455,7 @@ function Test(parent)
             container: null,
             inactive: null
         };
-    
+
     DOM.container = parent.newChildElement("table", {classList: "test__container"}, document.newElement("tr"));
     DOM.container.setEventListeners({"resize": center});
     DOM.inactive = document.newElement("div", {classList: "test__inactive_cover"});
@@ -1480,7 +1480,7 @@ function B3(seconds, audio, lasting, frame, state)
     var rest = (function()
     {
         puzzle.free();
-        
+
         iterations++;
         if (iterations >= 6)
         {
@@ -1500,7 +1500,7 @@ function B3(seconds, audio, lasting, frame, state)
         frame.activate(1);
         breaker.toggle();
         breaker.setTime(seconds);
-        
+
         if (audio)
         {
             track.play();
@@ -1516,7 +1516,7 @@ function B3(seconds, audio, lasting, frame, state)
                     {
                         track.play();
                     }
-                    
+
                     clearInterval(timer);
                     breaker.toggle();
                     frame.deactivate(1);
@@ -1544,7 +1544,7 @@ function B3(seconds, audio, lasting, frame, state)
     {
         track = document.body.newChildElement("audio", {"SRC": audio});
     }
-    
+
     frame.activate(0);
     frame.deactivate(1);
     frame.deactivate(2);
@@ -1600,19 +1600,19 @@ var tests =
                             state.continue();
                             return;
                         }
-                        
+
                         puzzle.free();
                         frame.deactivate(active);
                         frame.activate(!active);
                         active = !active;
                         setTimeout(switchGame, 10000);
                     }).bind(this);
-                    
+
                     var ariphmetics = new Ariphmetics(frame.add(0)),
                         puzzle = new Puzzle(frame.add(1)),
                         active = 0,
                         iterations = 0;
-                    
+
                     frame.activate(active);
                     frame.deactivate(!active);
                     setTimeout(switchGame, 10000);
@@ -1635,7 +1635,7 @@ var tests =
             run: function(frame, state)
                 {
                     var concentration = new Concentration(frame.add(0, true), 15000);
-                    
+
                     setTimeout(
                         (function()
                         {
@@ -1670,16 +1670,16 @@ var tests =
                                             document.body.removeChild(track);
                                             return;
                                         }
-                                        
+
                                         time--;
-                                        track.pause(); 
+                                        track.pause();
                                         track.currentTime = 0.0;
                                         track.play();
                                     }, 1000);
 
                                 B3(3, null, false, frame, state);
                             }).bind(this)}});
-                    
+
                     track.setAttribute("SRC", "WAV/clap.wav");
                 }
         },

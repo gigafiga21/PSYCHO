@@ -43,7 +43,7 @@
 
 .puzzle__frame
 {
-    stroke: #ffffff; 
+    stroke: #ffffff;
     stroke-dasharray: 4 2;
     stroke-width: 2;
     stroke-opacity: 0.5;

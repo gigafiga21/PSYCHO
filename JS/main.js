@@ -123,7 +123,7 @@ var tests =
                 }
         },
         {
-            name: "3А",
+            name: "3A",
             run: function(frame, state)
                 {
                     var switchGame = (function()
@@ -156,15 +156,15 @@ var tests =
                 }
         },
         {
-            name: "3Б",
+            name: "3B",
             run: B3.bind(null, 3, null, false)
         },
         {
-            name: "3B",
+            name: "3C",
             run: B3.bind(null, 6, null, false)
         },
         {
-            name: "3Г",
+            name: "3D",
             run: B3.bind(null, 10, null, false)
         },
         {
@@ -183,15 +183,15 @@ var tests =
                 }
         },
         {
-            name: "5А",
+            name: "5A",
             run: B3.bind(null, 3, "WAV/siren.wav", true)
         },
         {
-            name: "5Б",
+            name: "5B",
             run: B3.bind(null, 3, "WAV/clap.wav", false)
         },
         {
-            name: "5В",
+            name: "5C",
             run: function(frame, state)
                 {
                     var time = 75,
@@ -226,4 +226,5 @@ var tests =
         }
     ];
 
+translations.languages = ["EN", "RU"];
 var state = new State(document.body, tests);
