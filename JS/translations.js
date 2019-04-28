@@ -6,6 +6,27 @@ var translations = new
     (function()
     {
         /**
+         * Changes current language and dispatches event of it
+         * @param {String} language - choosed language name
+         */
+        function change(language)
+        {
+            var next = DOM.container.querySelector("[name='" + language + "']");
+            if (!next)
+            {
+                return;
+            }
+
+            var active = DOM.container.querySelector(".translations__button--active");
+            if (active)
+            {
+                active.classList.remove("translations__button--active");
+            }
+
+            next.classList.add("translations__button--active");
+        }
+
+        /**
          * DOM tree of the class
          * @type {Object}
          */
@@ -16,9 +37,13 @@ var translations = new
             };
 
         DOM.container = document.body.newChildElement("div", {classList: "translations__container"});
-        ["RU", "EN"].forEach(
+        ["EN", "RU"].forEach(
             (function(name)
             {
-                DOM.buttons.push(DOM.container.newChildElement("button", {classList: "translations__button"}, name));
+                var button = DOM.container.newChildElement("button", {classList: "translations__button", name: name}, name);
+                button.addEventListener("click", change.bind(this, name));
+                DOM.buttons.push(button);
             }).bind(this));
+
+        change("EN");
     })();
