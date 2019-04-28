@@ -1140,6 +1140,25 @@ function Concentration(parent, time)
 function Breaker(parent)
 {
     /**
+     * Translates all strings in the class to given language
+     * @param {String} language - language to change strings
+     */
+    function translate(language)
+    {
+        DOM.text.innerHTML = strings[translations.current].rest;
+    }
+
+    /**
+     * Translated strings
+     * @type {Array}
+     */
+    var strings =
+        {
+            "EN": {rest: "Teke a rest:"},
+            "RU": {rest: "Отдыхайте:"}
+        };
+
+    /**
      * Hides/unhides breaker container
      */
     this.toggle = function()
@@ -1178,8 +1197,9 @@ function Breaker(parent)
         hidden = true;
     
     DOM.container = parent.newChildElement("div", {classList: ["breaker__container", "breaker__container--hidden"]});
-    DOM.text = DOM.container.newChildElement("span", {classList: "breaker__text"}, "Отдыхайте:");
+    DOM.text = DOM.container.newChildElement("span", {classList: "breaker__text"}, strings[translations.current].rest);
     DOM.time = DOM.container.newChildElement("span", {classList: "breaker__time"});
+    translations.addEventListener(translate.bind(this));
 }
 
 /**
@@ -1566,7 +1586,7 @@ var tests =
                 }
         },
         {
-            name: "3А",
+            name: "3A",
             run: function(frame, state)
                 {
                     var switchGame = (function()
@@ -1599,15 +1619,15 @@ var tests =
                 }
         },
         {
-            name: "3Б",
+            name: "3B",
             run: B3.bind(null, 3, null, false)
         },
         {
-            name: "3B",
+            name: "3C",
             run: B3.bind(null, 6, null, false)
         },
         {
-            name: "3Г",
+            name: "3D",
             run: B3.bind(null, 10, null, false)
         },
         {
@@ -1626,15 +1646,15 @@ var tests =
                 }
         },
         {
-            name: "5А",
+            name: "5A",
             run: B3.bind(null, 3, "WAV/siren.wav", true)
         },
         {
-            name: "5Б",
+            name: "5B",
             run: B3.bind(null, 3, "WAV/clap.wav", false)
         },
         {
-            name: "5В",
+            name: "5C",
             run: function(frame, state)
                 {
                     var time = 75,
