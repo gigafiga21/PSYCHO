@@ -536,8 +536,42 @@ Math.random = function(min, max)
     
     return min + rand() * (max + 1 - min);
 }
+/**
+ * Singleton keeps all strings used for translation
+ * @type {Object}
+ */
+var translations = new
+    (function()
+    {
+        /**
+         * DOM tree of the class
+         * @type {Object}
+         */
+        var DOM =
+            {
+                container: null,
+                buttons: []
+            };
+
+        DOM.container = document.body.newChildElement("div", {classList: "translations__container"});
+        ["RU", "EN"].forEach(
+            (function(name)
+            {
+                DOM.buttons.push(DOM.container.newChildElement("button", {classList: "translations__button"}, name));
+            }).bind(this));
+    })();
+/**
+ * Puzzle game
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Puzzle(parent)
 {
+    /**
+     * Generates path of the random polygon with 3-6 angles
+     * This polygon will be sliced to the puzzles after
+     * @return {Array} - flat array with coords of vertices
+     */
     function generateMainFigure()
     {
         var angles = Math.random(3, 6),
@@ -556,6 +590,11 @@ function Puzzle(parent)
         return path;
     }
     
+    /**
+     * Splitts main polygon into the puzzles
+     * @param  {Array} polygon - flat array with coords of polygon
+     * @return {Array}         - contains arrays with coords of each piece of the sliced main polygon
+     */
     function splitMainFigure(polygon)
     {
         var slices = [];
@@ -590,6 +629,10 @@ function Puzzle(parent)
         return slices;
     }
     
+    /**
+     * Draggs puzzle piece while the mouse is down on it
+     * @type {Function}
+     */
     var drag = (function(event)
     {
         var points = dragging.getAttribute("points").split(","),
@@ -610,6 +653,11 @@ function Puzzle(parent)
         dragging.setAttribute("points", points);
     }).bind(this);
     
+    /**
+     * Releases dragging of the puzzle piece
+     * If piece was release at right place - will be fixed, else - returned to where it was before dragging
+     * @type {Function}
+     */
     var drop = (function(event)
     {
         var index = Number(dragging.getAttribute("index")),
@@ -640,6 +688,10 @@ function Puzzle(parent)
         dragging = null;
     }).bind(this);
     
+    /**
+     * Enables dragging of the puzzle piece after mouse is down on it
+     * @type {Function}
+     */
     var grab = (function(event)
     {
         dragging = event.target.cloneNode(true);
@@ -658,6 +710,9 @@ function Puzzle(parent)
         puzzles[index].cursorY = (event.pageY - canvasCoords.top) - box.y
     }).bind(this);
     
+    /**
+     * Generates SVG canvas and draws puzzle on it
+     */
     function drawPuzzle()
     {
         var polygon = generateMainFigure();
@@ -716,21 +771,38 @@ function Puzzle(parent)
         DOM.canvas.style.width = edge.xMax + 50 + "px";
     }
     
+    /**
+     * Releases grabbed puzzle piece
+     */
     this.free = function()
     {
         document.body.dispatchEvent(new Event("mouseup"));
     }
     
+    /**
+     * Returns amount of solved puzzles
+     * @return {Number}
+     */
     this.getScore = function()
     {
         return score;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM = 
         {
             canvas: null
         };
 
+    /**
+     * @var {Array}        puzzles  - array of SVG elements presented by the puzzle pieces
+     * @var {Number}       steps    - amount of pieces which was not placed yet at the puzzle at the right way
+     * @var {Element|Null} dragging - current dragging puzzle piece
+     * @var {Number}       score    - amount of solved puzzles
+     */
     var puzzles = [],
         steps = 0,
         dragging = null,
@@ -741,10 +813,27 @@ function Puzzle(parent)
     parent.appendChild(DOM.canvas);
     drawPuzzle();
 }
+
+/**
+ * Game based on the simple equatation solving
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Ariphmetics(parent)
 {
+    /**
+     * Generates equatation and calculates right solution for it
+     * @return {Equatation}
+     */
     function generateEquotation()
     {
+        /**
+         * @typedef {Object} Equatation
+         * @prop    {Number} a         - first operand
+         * @prop    {Number} b         - second operand
+         * @prop    {String} operation - operation applied to the operands
+         * @prop    {Number} result    - solution
+         */
         var equotation =
             {
                 a: null,
@@ -779,6 +868,10 @@ function Ariphmetics(parent)
         return equotation;
     }
     
+    /**
+     * Randomly generates wrong solutions for given equatation
+     * @param {Number} seed - right solution of the equatation
+     */
     function generateAnswers(seed)
     {
         var answers = [];
@@ -799,6 +892,9 @@ function Ariphmetics(parent)
         return answers.slice(0, 2);
     }
     
+    /**
+     * Fills DOM of the class instance with generated equatation and solutions
+     */
     function generateTask()
     {
         var equotation = generateEquotation(),
@@ -834,11 +930,19 @@ function Ariphmetics(parent)
         generateTask();
     }
     
+    /**
+     * Returns amount of equatations solved right
+     * @return {Number}
+     */
     this.getScore = function()
     {
         return score;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
@@ -846,6 +950,10 @@ function Ariphmetics(parent)
             answers: null
         };
     
+    /**
+     * Amount of given right solutions
+     * @type {Number}
+     */
     var score = 0;
     
     DOM.container = parent.newChildElement("div", {classList: "ariphmetics__container"});
@@ -854,8 +962,18 @@ function Ariphmetics(parent)
     
     generateTask();
 }
+
+/**
+ * Game based on pressing button after the dot appears on the screen
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ * @param {Number}  time   - maximum amount of seconds between pressing button and displaying the dot again
+ */
 function Concentration(parent, time)
 {
+    /**
+     * Draws dot on the random coords at the game field
+     */
     function drawPoint()
     {
         DOM.point = DOM.field.newChildElement("div", {classList: "concentration__point"});
@@ -863,6 +981,9 @@ function Concentration(parent, time)
         DOM.point.style.top = Math.floor(Math.random(5, 260)) + "px";
     }
     
+    /**
+     * Removes previously drawed dot and setts timeout for drawing next one randomly
+     */
     function generatePoint()
     {
         if (!DOM.point && !first)
@@ -887,6 +1008,10 @@ function Concentration(parent, time)
             }, Math.floor(Math.random(0, time / 4)));
     }
     
+    /**
+     * Removes processing timeout for dot drawing
+     * Calls when class instance was destroyed by removing game from screen
+     */
     this.free = function()
     {
         if (timer != null)
@@ -896,6 +1021,10 @@ function Concentration(parent, time)
         }
     }
     
+    /**
+     * Processes button click when 'Enter' is pressed
+     * @type {Function}
+     */
     var getCode = (function(event)
     {
         if (event.which == 13 || event.keyCode == 13)
@@ -904,6 +1033,11 @@ function Concentration(parent, time)
         }
     }).bind(this);
     
+    /**
+     * @var {Number} timer - id of the processing dot drawing timer
+     * @var {Bool}   first - flag for avoiding removing unexisting dot when regenerating it first time
+     * @var {Object} DOM   - DOM tree of the class
+     */
     var timer = null,
         first = true,
         DOM =
@@ -922,8 +1056,17 @@ function Concentration(parent, time)
     DOM.button.addEventListener("click", generatePoint.bind(this));
     document.body.addEventListener("keyup", getCode);
 }
+
+/**
+ * Manages breaks between games
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ */
 function Breaker(parent)
 {
+    /**
+     * Hides/unhides breaker container
+     */
     this.toggle = function()
     {
         if (hidden)
@@ -938,11 +1081,19 @@ function Breaker(parent)
         hidden = !hidden;
     }
     
+    /**
+     * Setts time for the break
+     * @param {Number} time - amount of time for the break
+     */
     this.setTime = function(time)
     {
         DOM.time.innerHTML = time + "s";
     }
     
+    /**
+     * @var {Object} DOM    - DOM tree of the class
+     * @var {Bool}   hidden - flag for indicating visibility
+     */
     var DOM =
         {
             container: null,
@@ -955,8 +1106,19 @@ function Breaker(parent)
     DOM.text = DOM.container.newChildElement("span", {classList: "breaker__text"}, "Отдыхайте:");
     DOM.time = DOM.container.newChildElement("span", {classList: "breaker__time"});
 }
+
+/**
+ * Shows given score on screen
+ * @constructor
+ * @param {Element} parent - where to place DOM of the class
+ * @param {Number}  score  - score to display
+ */
 function Score(parent, score)
 {
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
@@ -968,8 +1130,20 @@ function Score(parent, score)
     DOM.header = DOM.container.newChildElement("span", {classList: "score__header"}, "Результат:");
     DOM.score = DOM.container.newChildElement("span", {classList: "score__result"}, "" + score);
 }
+
+/**
+ * Class manages tests switching
+ * @constructor
+ * @param {Element}       parent       - where to place app
+ * @param {Array[Object]} tests        - array with description of tests
+ * @param {String}        tests[].name - name of the test
+ * @param {Function}      tests[].run  - function runs the test
+ */
 function State(parent, tests)
 {
+    /**
+     * Generates start screen of the app
+     */
     function generateStartScreen()
     {
         var menu = frame.add(0);
@@ -980,7 +1154,10 @@ function State(parent, tests)
             }, "Начать тестирование");
     }
     
-    var next = (function()
+    /**
+     * Switches to the next test
+     */
+    function next()
     {
         current++;
         frame.free();
@@ -988,8 +1165,13 @@ function State(parent, tests)
         DOM.next.disabled = true;
         
         tests[current].run(frame, this);
-    }).bind(this);
+    }
     
+    /**
+     * Freed ability (makes button active) to go to the next test.
+     * Calls by function run stored in the tests array when test is done
+     * @callback run
+     */
     this.continue = function()
     {
         if (current == tests.length - 1)
@@ -998,9 +1180,13 @@ function State(parent, tests)
             current = -1;
         }
         
-        DOM.next.disabled = false
+        DOM.next.disabled = false;
     }
     
+    /**
+     * DOM tree of the class
+     * @type {Object}
+     */
     var DOM =
         {
             container: null,
@@ -1009,6 +1195,10 @@ function State(parent, tests)
             frame: null
         };
     
+    /**
+     * @var {Number} current - current test index
+     * @var {Test}   frame   - container class for test
+     */
     var current = -1,
         frame = new Test(document.body);
     
@@ -1019,8 +1209,18 @@ function State(parent, tests)
     DOM.next = DOM.container.newChildElement("button", {classList: "state__button", eventListeners: {"click": next.bind(this)}}, "Следующий >");
     next();
 }
+
+/**
+ * Container class for the test managing animation and switching games screens
+ * @constructor
+ * @param {Element} parent - wherde to place DOM of the class
+ */
 function Test(parent)
 {
+    /**
+     * Center the current active screen
+     * @type {Function}
+     */
     var center = (function()
     {
         if (!isResizable)
@@ -1035,6 +1235,10 @@ function Test(parent)
         DOM.container.style.left = cellCentered - element.offsetLeft + "px";
     }).bind(this);
     
+    /**
+     * Covers inactive screen with transparent block to prevent activating inner screen elements
+     * @param {*} index - index of screen to cover
+     */
     this.deactivate = function(index)
     {
         index = Number(index);
@@ -1042,6 +1246,10 @@ function Test(parent)
         DOM.container.rows[0].cells[index].setCSS("test__inactive");
     }
     
+    /**
+     * Removes coverage and makesw screen active
+     * @param {*} index - index of screen to make active
+     */
     this.activate = function(index)
     {
         active = Number(index);
@@ -1056,6 +1264,12 @@ function Test(parent)
         }
     }
     
+    /**
+     * Adds screen to the container
+     * @param  {*}      index         - index of the screen
+     * @param  {Bool}   isUnresizable - if false, it will be possible to resize screen while animation
+     * @return {Element}              - container to place game/smth else
+     */
     this.add = function(index, isUnresizable)
     {
         var cell = DOM.container.rows[0].insertCell(index);
@@ -1070,6 +1284,9 @@ function Test(parent)
         return cell;
     }
     
+    /**
+     * Removes all inserted screens
+     */
     this.free = function()
     {
         active = 0;
@@ -1078,6 +1295,11 @@ function Test(parent)
         DOM.container.rows[0].innerHTML = "";
     }
     
+    /**
+     * @var {Bool}   isResizable - is current screen resizable
+     * @var {*}      active      - index of an active screen
+     * @var {Object} DOM         - DOM tree of the class
+     */
     var isResizable = true,
         active = 0,
         DOM =
@@ -1090,6 +1312,15 @@ function Test(parent)
     DOM.container.setEventListeners({"resize": center});
     DOM.inactive = document.newElement("div", {classList: "test__inactive_cover"});
 }
+
+/**
+ * Function managing tests similar to 3B one
+ * @param {Number} seconds - amount of seconds for the rest
+ * @param {String} audio   - audiotrack playing while rest
+ * @param {Bool}   lasting - if true then audiotrack will be played through all rest time
+ * @param {Test}   frame   - container for the screens
+ * @param {State}  state   - container for the tests
+ */
 function B3(seconds, audio, lasting, frame, state)
 {
     var switchGame = (function()
@@ -1172,6 +1403,10 @@ function B3(seconds, audio, lasting, frame, state)
     setTimeout(rest, 10000);
 }
 
+/**
+ * All tests
+ * @type {Array}
+ */
 var tests =
     [
         {

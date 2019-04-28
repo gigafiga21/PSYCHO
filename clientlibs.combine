@@ -4,6 +4,7 @@
         {
             "output": "BIN/bin.css",
             "files": [
+                "CSS/translations.css",
                 "CSS/puzzle.css",
                 "CSS/ariphmetics.css",
                 "CSS/concentration.css",
@@ -20,6 +21,7 @@
                 "JS/basis.min.js",
                 "JS/polyk.js",
                 "JS/common.js",
+                "JS/translations.js",
                 "JS/puzzle.js",
                 "JS/ariphmetics.js",
                 "JS/concentration.js",
